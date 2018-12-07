@@ -5,21 +5,11 @@ RUN apt-get update && apt-get install -y software-properties-common && add-apt-r
 
 RUN ln -sfn /usr/bin/python3.6 /usr/bin/python3 && ln -sfn /usr/bin/python3 /usr/bin/python && ln -sfn /usr/bin/pip3 /usr/bin/pip
 
-RUN pip --no-cache-dir install \
-    numpy \
-    scipy \
-    jupyter \
-    matplotlib \
-    Pillow \
-    scikit-learn \
-    pandas \
-    tensorflow \
-    nltk \
-    sklearn \
-    gensim \
-    wget
+# By copying over requirements first, we make sure that Docker will cache
+# our installed requirements rather than reinstall them on every build
+COPY src/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-RUN mkdir /data
-
-WORKDIR /data
-
+RUN mkdir /home/src/
+COPY ./src/ /home/src/
+WORKDIR /home/src/
