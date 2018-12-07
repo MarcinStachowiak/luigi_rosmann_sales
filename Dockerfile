@@ -7,7 +7,7 @@ RUN ln -sfn /usr/bin/python3.6 /usr/bin/python3 && ln -sfn /usr/bin/python3 /usr
 
 # By copying over requirements first, we make sure that Docker will cache
 # our installed requirements rather than reinstall them on every build
-COPY src/requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 RUN mkdir /home/src/
