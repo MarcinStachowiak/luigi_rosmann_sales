@@ -1,79 +1,25 @@
-# ==================================================================
-# module list
-# ------------------------------------------------------------------
-# python        3.6    (apt)
-# tensorflow    latest (pip)
-# ==================================================================
-
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
-    GIT_CLONE="git clone --depth 10" && \
 
-    rm -rf /var/lib/apt/lists/* \
-           /etc/apt/sources.list.d/cuda.list \
-           /etc/apt/sources.list.d/nvidia-ml.list && \
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && apt-get install -y python3.6 python3.6-dev python3-pip
 
-    apt-get update && \
+RUN ln -sfn /usr/bin/python3.6 /usr/bin/python3 && ln -sfn /usr/bin/python3 /usr/bin/python && ln -sfn /usr/bin/pip3 /usr/bin/pip
 
-# ==================================================================
-# tools
-# ------------------------------------------------------------------
+RUN pip --no-cache-dir install \
+    numpy \
+    scipy \
+    jupyter \
+    matplotlib \
+    Pillow \
+    scikit-learn \
+    pandas \
+    tensorflow \
+    nltk \
+    sklearn \
+    gensim \
+    wget
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        build-essential \
-        ca-certificates \
-        cmake \
-        wget \
-        git \
-        vim \
-        && \
+RUN mkdir /data
 
-# ==================================================================
-# python
-# ------------------------------------------------------------------
+WORKDIR /data
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        python3.6 \
-        python3.6-dev \
-        && \
-    wget -O ~/get-pip.py \
-        https://bootstrap.pypa.io/get-pip.py && \
-    python3.6 ~/get-pip.py && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
-    $PIP_INSTALL \
-        setuptools \
-        && \
-    $PIP_INSTALL \
-        numpy \
-        scipy \
-        pandas \
-        scikit-learn \
-        matplotlib \
-        Cython \
-        && \
-
-# ==================================================================
-# tensorflow
-# ------------------------------------------------------------------
-
-    $PIP_INSTALL \
-        tensorflow-gpu \
-        && \
-
-# ==================================================================
-# config & cleanup
-# ------------------------------------------------------------------
-
-    ldconfig && \
-    apt-get clean && \
-    apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* ~/*
-
-EXPOSE 6006
