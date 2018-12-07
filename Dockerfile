@@ -11,5 +11,5 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 RUN mkdir /home/src/
-COPY ./src/ /home/src/
+COPY . /home/src/
 WORKDIR /home/src/
