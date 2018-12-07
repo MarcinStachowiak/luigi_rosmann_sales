@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  hier_att_nn_tf:
+    image: hier_att_nn_tf
+    container_name: hier_att_nn_tf
+    build: .
